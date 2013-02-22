@@ -28,6 +28,8 @@ Copyright 2007, The Digital Library Federation, All Rights Reserved
   xmlns:m="http://www.loc.gov/mods/v3"
   xmlns:foxml="info:fedora/fedora-system:def/foxml#">
   
+  <xsl:include href="/usr/local/fedora/tomcat/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/gsearch_solr/islandora_transforms/library/xslt-date-template.xslt"/>
+
     <xsl:template match="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]" name="index_MODS">
       <xsl:param name="content"/>
       <xsl:param name="prefix">mods_</xsl:param>
@@ -39,6 +41,20 @@ Copyright 2007, The Digital Library Federation, All Rights Reserved
       </xsl:apply-templates>
     </xsl:template>
 
+  <!-- This is a recursive template that will concatenate
+    all the local names of parents of the supplied node.
+    This is to provide context to the Solr field.-->
+  <xsl:template name="get_all_parents">
+    <xsl:param name="node"/>
+    
+    <xsl:if test="not(local-name($node)='mods')">
+      <xsl:call-template name="get_all_parents">
+        <xsl:with-param name="node" select="$node/.."/>
+      </xsl:call-template>
+      <xsl:value-of select="concat('_', local-name($node))"/>
+    </xsl:if>
+      
+  </xsl:template>
     <!--
     <xsl:template match="/">
         <xsl:apply-templates />
@@ -609,6 +625,8 @@ Copyright 2007, The Digital Library Federation, All Rights Reserved
      + then for the first copyrightDate
      + then for the first dateOther
      +-->
+        <xsl:param name="prefix">mods</xsl:param>
+        <xsl:param name="suffix">_ms</xsl:param>
         <xsl:variable name="date_splat_w3c_key_date" select="*[@keyDate and @*='w3cdtf']" />
         <xsl:variable name="date_splat_key_date" select="*[@keyDate]" />
         <xsl:variable name="date_created" select="m:dateCreated[not(@keyDate)]" />
@@ -821,5 +839,32 @@ Copyright 2007, The Digital Library Federation, All Rights Reserved
                 </xsl:if>
             </xsl:element>
         </xsl:if>
+        
+        <!-- Handle dates. -->
+        <xsl:for-each select=".//m:*[(@type='date') or (contains(translate(local-name(), 'D', 'd'), 'date'))][normalize-space(text())]">
+          
+          <xsl:variable name="textValue">
+            <xsl:call-template name="get_ISO8601_date">
+              <xsl:with-param name="date" select="normalize-space(text())"/>
+            </xsl:call-template>
+          </xsl:variable>
+          
+          <xsl:variable name="fieldName">
+            <xsl:call-template name="get_all_parents">
+              <xsl:with-param name="node" select="."/>
+            </xsl:call-template>
+          </xsl:variable>
+          
+          <xsl:if test="normalize-space($textValue)">
+            <field>
+              <xsl:attribute name="name">
+                <xsl:value-of select="concat($prefix, $fieldName, '_dt')"/>
+              </xsl:attribute>
+              <xsl:value-of select="$textValue"/>
+            </field>
+          </xsl:if>
+        </xsl:for-each>
+
     </xsl:template>
+
 </xsl:stylesheet>
