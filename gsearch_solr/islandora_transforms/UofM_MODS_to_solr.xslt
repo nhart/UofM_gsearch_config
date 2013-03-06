@@ -858,7 +858,19 @@ Copyright 2007, The Digital Library Federation, All Rights Reserved
           <xsl:if test="normalize-space($textValue)">
             <field>
               <xsl:attribute name="name">
-                <xsl:value-of select="concat($prefix, $fieldName, '_dt')"/>
+	        <xsl:choose>
+                  <xsl:when test="@point = 'start'">
+                    <xsl:value-of select="concat($prefix, $fieldName, '_', 'start', '_dt')"/>
+                  </xsl:when>
+                  <xsl:when test="@point = 'end'">
+                    <xsl:value-of select="concat($prefix, $fieldName, '_', 'end', '_dt')"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:value-of select="concat($prefix, $fieldName, '_dt')"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+
+              <!--  <xsl:value-of select="concat($prefix, $fieldName, '_dt')"/> -->
               </xsl:attribute>
               <xsl:value-of select="$textValue"/>
             </field>
