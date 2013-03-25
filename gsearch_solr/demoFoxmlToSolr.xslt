@@ -135,7 +135,7 @@
             </xsl:apply-templates>
           </xsl:when>
           <!-- non-xml managed datastreams -->
-          <xsl:when test="@CONTROL_GROUP='M'">
+          <xsl:when test="@CONTROL_GROUP='M' and foxml:datastreamVersion[last() and not(starts-with(@MIMETYPE, 'image'))]">
             <!-- TODO: should do something about mime type filtering
               text/plain should use the getDatastreamText extension because document will only work for xml docs
               xml files should use the document function
@@ -148,6 +148,7 @@
         </xsl:choose>
       </xsl:for-each>
       <!-- this is an example of using template modes to have multiple ways of indexing the same stream -->
+      <!--
       <xsl:apply-templates select="foxml:datastream[@ID='EAC-CPF']/foxml:datastreamVersion[last()]/foxml:xmlContent//eaccpf:eac-cpf">
         <xsl:with-param name="pid" select="$PID"/>
       </xsl:apply-templates>
@@ -156,6 +157,7 @@
         <xsl:with-param name="pid" select="$PID"/>
         <xsl:with-param name="suffix">_s</xsl:with-param>
       </xsl:apply-templates>
+      -->
 
     </doc>
   </xsl:template>
@@ -172,5 +174,8 @@
 
   <!-- This prevents text from just being printed to the doc without field elements JUST TRY COMMENTING IT OUT -->
   <xsl:template match="text()"/>
+  <xsl:template match="text()" mode="indexFedoraObject"/>
+  <xsl:template match="text()" mode="unindexFedoraObject"/>
+  <xsl:template match="text()" mode="index_object_datastreams"/>
 
 </xsl:stylesheet>
