@@ -577,7 +577,7 @@ Copyright 2007, The Digital Library Federation, All Rights Reserved
                 <xsl:value-of select="m:identifier" />
             </xsl:element>
             <xsl:element name="field">
-                <xsl:attribute name="name">related_item_title_mt</xsl:attribute>
+                <xsl:attribute name="name">related_item_title_ms</xsl:attribute>
                 <xsl:value-of select="m:titleInfo/m:title" />
             </xsl:element>
         </xsl:if>
