@@ -135,7 +135,8 @@
             </xsl:apply-templates>
           </xsl:when>
           <!-- non-xml managed datastreams -->
-          <xsl:when test="@CONTROL_GROUP='M' and foxml:datastreamVersion[last() and not(starts-with(@MIMETYPE, 'image'))]">
+          <!-- avoid grabbing PDFs where OCR exists... -->
+          <xsl:when test="@CONTROL_GROUP='M' and foxml:datastreamVersion[last() and not(starts-with(@MIMETYPE, 'image')) and not(@MIMETYPE='application/pdf' and ../../foxml:datastream[@ID='OCR'])]">
             <!-- TODO: should do something about mime type filtering
               text/plain should use the getDatastreamText extension because document will only work for xml docs
               xml files should use the document function
