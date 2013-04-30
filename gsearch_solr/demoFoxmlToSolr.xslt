@@ -20,7 +20,6 @@
   xmlns:tei="http://www.tei-c.org/ns/1.0"
   xmlns:mods="http://www.loc.gov/mods/v3"
   xmlns:exts="xalan://dk.defxws.fedoragsearch.server.GenericOperationsImpl"
-  xmlns:islandora-exts="xalan://ca.upei.roblib.DataStreamForXSLT"
             exclude-result-prefixes="exts"
   xmlns:encoder="xalan://java.net.URLEncoder">
 

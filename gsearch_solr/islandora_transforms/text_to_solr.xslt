@@ -4,7 +4,6 @@
   xmlns:foxml="info:fedora/fedora-system:def/foxml#"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:exts="xalan://dk.defxws.fedoragsearch.server.GenericOperationsImpl"
-  xmlns:islandora-exts="xalan://ca.upei.roblib.DataStreamForXSLT"
             exclude-result-prefixes="exts">
   <!-- Datastreams: OCR, TEXT, FULL_TEXT, ocr, text, full_text, fullText
       will probably need to have many templates match and feed into one?
@@ -18,7 +17,6 @@
       <xsl:attribute name="name">
         <xsl:value-of select="concat(../@ID, '_t')"/>
       </xsl:attribute>
-      <!--<xsl:value-of select="$content"/>-->
       <xsl:value-of select="$content"/>
     </field>
   </xsl:template>
