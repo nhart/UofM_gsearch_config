@@ -3,22 +3,7 @@
      to be effective -->
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:zs="http://www.loc.gov/zing/srw/"
   xmlns:foxml="info:fedora/fedora-system:def/foxml#"
-  xmlns:rel="info:fedora/fedora-system:def/relations-external#"
-  xmlns:fedora-model="info:fedora/fedora-system:def/model#"
-  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-  xmlns:dc="http://purl.org/dc/elements/1.1/"
-  xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
-  xmlns:fedora="info:fedora/fedora-system:def/relations-external#"
-  xmlns:dwc="http://rs.tdwg.org/dwc/xsd/simpledarwincore/"
-  xmlns:uvalibdesc="http://dl.lib.virginia.edu/bin/dtd/descmeta/descmeta.dtd"
-  xmlns:uvalibadmin="http://dl.lib.virginia.edu/bin/admin/admin.dtd/"
-  xmlns:res="http://www.w3.org/2001/sw/DataAccess/rf1/result"
-  xmlns:eaccpf="urn:isbn:1-931666-33-4"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:tei="http://www.tei-c.org/ns/1.0"
-  xmlns:mods="http://www.loc.gov/mods/v3"
   xmlns:exts="xalan://dk.defxws.fedoragsearch.server.GenericOperationsImpl"
             exclude-result-prefixes="exts"
   xmlns:encoder="xalan://java.net.URLEncoder">
@@ -120,8 +105,11 @@
         <xsl:choose>
           <xsl:when test="@CONTROL_GROUP='X'">
             <xsl:apply-templates select="foxml:datastreamVersion[last()]">
-              <xsl:with-param name="content" select="foxml:datastreamVersion[last()]/foxml:xmlContent"/>
+              <!--<xsl:with-param name="content" select="foxml:datastreamVersion[last()]/foxml:xmlContent"/>-->
+              <xsl:with-param name="content" select="document(concat($PROT, '://', encoder:encode($FEDORAUSER), ':', encoder:encode($FEDORAPASS), '@', $HOST, ':', $PORT, '/fedora/objects/', $PID, '/datastreams/', @ID, '/content'))"/>
             </xsl:apply-templates>
+          </xsl:when>
+          <xsl:when test="@ID='HOCR'">
           </xsl:when>
           <xsl:when test="@CONTROL_GROUP='M' and foxml:datastreamVersion[last()][@MIMETYPE='text/xml' or @MIMETYPE='application/xml' or @MIMETYPE='application/rdf+xml' or @MIMETYPE='text/html']">
             <!-- TODO: should do something about mime type filtering

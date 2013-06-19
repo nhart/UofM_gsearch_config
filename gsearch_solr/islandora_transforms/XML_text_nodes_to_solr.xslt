@@ -3,6 +3,10 @@
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:foxml='info:fedora/fedora-system:def/foxml#'>
+
+  <xsl:template match="/">
+    <xsl:apply-templates mode="index_text_nodes_as_a_text_field"/>
+  </xsl:template>
   <!-- have the template match whatever datastream needs this type of processing -->
   <xsl:template match="foxml:datastream[@ID='HOCR']/foxml:datastreamVersion[last()]" name="index_text_nodes_as_a_text_field">
     <xsl:param name="content"/>
@@ -13,6 +17,8 @@
       <xsl:attribute name="name">
         <xsl:value-of select="concat($prefix, ../@ID , $suffix)"/>
       </xsl:attribute>
+<!--      <xsl:value-of select="normalize-space($content)"/>
+-->
       <xsl:apply-templates select="$content" mode="index_text_nodes_as_a_text_field"/>
     </field>
   </xsl:template>
